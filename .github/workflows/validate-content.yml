@@ -50,10 +50,12 @@ jobs:
       # even when validation fails.
       - name: Save PR metadata for comment workflow
         if: github.event_name == 'pull_request'
+        env:
+          PR_HEAD_REF: ${{ github.event.pull_request.head.ref }}
         run: |
           mkdir -p /tmp/pr-info
           echo "${{ github.event.pull_request.number }}" > /tmp/pr-info/pr-number.txt
-          echo "${{ github.event.pull_request.head.ref }}"  > /tmp/pr-info/branch.txt
+          echo "$PR_HEAD_REF"  > /tmp/pr-info/branch.txt
           if [ "${{ steps.changed.outputs.any_changed }}" != "true" ]; then
             echo "skip" > /tmp/pr-info/outcome.txt
             echo ""     > /tmp/pr-info/output.txt
